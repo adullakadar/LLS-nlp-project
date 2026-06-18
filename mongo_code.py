@@ -3,7 +3,7 @@ from pymongo.server_api import ServerApi
 from dotenv import load_dotenv
 import os
 from comment_class import RawComment
-
+import pandas as pd
 
 def mongo_connect():
 
@@ -47,3 +47,12 @@ def insert_comments(collection, comments):
 
   print(f"inserted {inserted} new comment(s)")
   return inserted
+
+
+def load_collection_to_df(collection):
+  docs = list(collection.find({}))
+  df = pd.DataFrame(docs)
+  if "_id" in df.columns:
+    df = df.rename(columns={"_id": "comment_id"})
+  print(f"loaded {len(df)} documents from {collection.name}")
+  return df
