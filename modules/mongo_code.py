@@ -27,7 +27,7 @@ def load_collection_to_df(collection):
   docs = list(collection.find({}))
   df = pd.DataFrame(docs)
   if "_id" in df.columns:
-    df = df.rename(columns=["_id":])
+    df = df.rename(columns=["_id"])
   print(f"loaded {len(df)} documents from {collection.name}")
   return df
 
