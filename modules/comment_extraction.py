@@ -21,7 +21,8 @@ def top_level_format(item, video_id):
     
     snippet = item["snippet"]["topLevelComment"]["snippet"]
     return {
-        "comment_id": item["snippet"]["topLevelComment"]["id"],
+        "source_id": item["snippet"]["topLevelComment"]["id"],
+        "source_type": "comment",
         "video_id": video_id,
         "parent_id": None,
         "is_reply": False,
