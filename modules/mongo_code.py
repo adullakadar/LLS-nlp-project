@@ -23,13 +23,13 @@ def get_collection(db, collection_name):
    collection.create_index("video_id")
    return collection
 
-def load_collection_to_df(collection):
-  docs = list(collection.find({}))
-  df = pd.DataFrame(docs)
-  if "_id" in df.columns:
-    df = df.rename(columns=["_id"])
-  print(f"loaded {len(df)} documents from {collection.name}")
-  return df
+def load_collection_to_df(collection,):
+    docs = list(collection.find({}))
+    df = pd.DataFrame(docs)
+    if "_id" in df.columns:
+        df = df.rename(columns={"_id": 'source_id'})
+    print(f"loaded {len(df)} documents from {collection.name}")
+    return df
 
 def insert_df(collection, df):
   

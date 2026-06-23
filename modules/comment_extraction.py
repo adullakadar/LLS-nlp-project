@@ -37,7 +37,8 @@ def reply_format(reply, video_id):
     
     snippet = reply["snippet"]
     return {
-        "comment_id": reply["id"],
+        "source_id": reply["id"],
+        "source_type": "comment",
         "video_id": video_id,
         "parent_id": snippet["parentId"],
         "is_reply": True,
@@ -48,7 +49,7 @@ def reply_format(reply, video_id):
     }
 
 
-def parse_top_comments(video_id, youtube_api):
+def parse_top_comments(video_id, youtube_api, limit):
     rows = []
     next_page_token = None
  
@@ -70,7 +71,9 @@ def parse_top_comments(video_id, youtube_api):
                 rows.extend(parse_replies(parent_id, video_id, youtube_api))
  
         print(f"Video {video_id}: collected {len(rows)} rows so far")
- 
+        
+        if limit and len(rows) >= limit:
+            break
         next_page_token = response.get("nextPageToken")
         if not next_page_token:
             break
@@ -101,16 +104,16 @@ def parse_replies(parent_id, video_id, youtube_api):
 
 
 
-def extract_comments(youtube_api, video_id):
+def extract_comments(youtube_api, video_id,limit=100):
 
   comments = []
 
   comments.extend(
-      parse_top_comments(video_id, youtube_api)
+      parse_top_comments(video_id, youtube_api,limit)
   )
 
   df = pd.DataFrame(comments)
-  df = df.drop_duplicates(subset=['comment_id'])
+  df = df.drop_duplicates(subset=['source_id'])
   df = df.dropna(subset=['text'])
   df = df[df["text"].str.strip() != ""]
   df = df.reset_index(drop=True)
