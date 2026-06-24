@@ -42,7 +42,7 @@ def extract_entities_batch(texts, nlp, batch_size=100):
 
   return all_entities
 
-def extract_entities_df(df, nlp, text_col="clean_text"):
+def extract_entities_df(df, nlp, text_col):
     """Add an `entities` column and return the df."""
     df = df.copy()
     df["entities"] = extract_entities_batch(df[text_col].tolist(), nlp)
