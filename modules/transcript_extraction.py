@@ -40,10 +40,10 @@ def save_transcript(video_id,transcript_lines):
     with open(path, 'w') as f:
        json.dump(transcript_lines,f,indent=2)
 
-def load_transcript(video_id,transcript_lines):
+def load_transcript(video_id):
     path = f'saved_transcripts/{video_id}.json'
     with open(path) as f:
-       json.load(f)
+      return json.load(f)
 
 def preprocess_transcript_line(line):
 
