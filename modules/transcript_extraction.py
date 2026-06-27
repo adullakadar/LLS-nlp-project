@@ -36,12 +36,12 @@ def parse_transcript(video_id):
   return transcript_lines
 
 def save_transcript(video_id,transcript_lines):
-    path = f'saved_transcripts/{video_id}.json'
+    path = f'model_data/{video_id}.json'
     with open(path, 'w') as f:
        json.dump(transcript_lines,f,indent=2)
 
 def load_transcript(video_id):
-    path = f'saved_transcripts/{video_id}.json'
+    path = f'model_data/{video_id}.json'
     with open(path) as f:
       return json.load(f)
 
