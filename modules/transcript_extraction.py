@@ -94,24 +94,48 @@ def extract_noun_phrases_chink(text, grammar=NP_CHINK_GRAMMAR):
     tree = nltk.RegexpParser(grammar).parse(tagged)
     return phrases_from_tree(tree)
 
-def extract_transcript(video_id, per_chunk_time):
-  rows = []
-  transcript_lines = parse_transcript(video_id)
+# def extract_transcript(video_id, per_chunk_time):
+#   rows = []
+#   transcript_lines = parse_transcript(video_id)
 
-  chunks = chunk_lines(transcript_lines, per_chunk_time)
+#   chunks = chunk_lines(transcript_lines, per_chunk_time)
 
-  for i, chunk in enumerate(chunks):
-      row = {
-          "source_id": f"{video_id}_t_{i}",  # becomes Mongo _id, like comment source_id
-          "source_type": "transcript",       # vs "comment" elsewhere
-          "video_id": video_id,
-          "chunk_index": i,
-          "start_time": round(chunk["start_time"], 1),
-          "text": chunk["text"],
-      }
-      row["noun_phrases"] = extract_noun_phrases(chunk["text"])
-      rows.append(row)
+#   for i, chunk in enumerate(chunks):
+#       row = {
+#           "source_id": f"{video_id}_t_{i}",  # becomes Mongo _id, like comment source_id
+#           "source_type": "transcript",       # vs "comment" elsewhere
+#           "video_id": video_id,
+#           "chunk_index": i,
+#           "start_time": round(chunk["start_time"], 1),
+#           "text": chunk["text"],
+#       }
+#       row["noun_phrases"] = extract_noun_phrases(chunk["text"])
+#       rows.append(row)
 
-  print(f"{video_id}: {len(chunks)} chunks")
+#   print(f"{video_id}: {len(chunks)} chunks")
 
-  return pd.DataFrame(rows)
+#   return pd.DataFrame(rows)
+
+
+def extract_transcript_from_lines(lines, video_id, window_seconds):
+    """Build the chunked df from already-parsed lines (no fetch)."""
+    chunks = chunk_lines(lines, window_seconds)
+    rows = []
+    for i, chunk in enumerate(chunks):
+        row = {
+            "source_id": f"{video_id}_t_{i}",
+            "source_type": "transcript",
+            "video_id": video_id,
+            "chunk_index": i,
+            "start_time": round(chunk["start_time"], 1),
+            "text": chunk["text"],
+        }
+        row["noun_phrases"] = extract_noun_phrases(chunk["text"])
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def extract_transcript(video_id, window_seconds):
+    """Fetch + chunk (original behavior, for direct callers)."""
+    lines = parse_transcript(video_id)
+    return extract_transcript_from_lines(lines, video_id, window_seconds)

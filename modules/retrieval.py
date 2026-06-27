@@ -62,10 +62,12 @@ def load_corpus_from_df(df):
   vectors = []
   metadata = []
   for i, row in df.iterrows():
-    text = row.get('clean_text') or row.get('text')
+    text = row.get('clean_text')
+    if not isinstance(text,str) or not text.strip():
+      text = row.get('text')
     vector = row.get('embedding')
     
-    if not text or vector is None:
+    if not isinstance(text, str) or not text.strip() or vector is None:
       continue
 
     texts.append(text)
@@ -78,3 +80,26 @@ def load_corpus_from_df(df):
 
   print(f'loaded {len(texts)} from {df}')
   return texts,vectors, metadata
+
+def filtered_search(vectorstore, query, source_type=None, video_id=None,
+                    k=5, fetch_k=441):
+    """
+    Semantic search restricted by metadata (source_type and/or video_id).
+    fetch_k is set high because FAISS fetches fetch_k docs BEFORE filtering,
+    so a small fetch_k can return nothing when the wanted type is rare.
+    """
+    # build the metadata filter from whatever was passed
+    meta_filter = {}
+    if source_type:
+        meta_filter["source_type"] = source_type
+    if video_id:
+        meta_filter["video_id"] = video_id
+
+    docs = vectorstore.similarity_search(
+        query,
+        k=k,
+        fetch_k=fetch_k,
+        filter=meta_filter if meta_filter else None,
+    )
+
+    return [{"text": d.page_content, **d.metadata} for d in docs]

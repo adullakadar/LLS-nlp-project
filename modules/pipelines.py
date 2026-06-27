@@ -2,9 +2,8 @@ from modules.comment_extraction import extract_comments
 from modules.comment_preprocessing import preprocess_df
 from modules.processing import extract_entities_df, add_sentiment_df, extract_keywords_df
 from modules.embeddings import embed_df
-
-from modules.transcript_extraction import parse_transcript, extract_transcript
-from modules.data_store import save_transcript, transcript_exists, save_df_csv, load_df_csv, csv_exists
+from modules.transcript_extraction import parse_transcript, extract_transcript, extract_transcript_from_lines
+from modules.data_store import save_transcript, transcript_exists, save_df_csv, load_df_csv, csv_exists, load_transcript
 
 
 # Comment extraction for 1 video, saves raw comments
@@ -15,7 +14,7 @@ def extract_video_comments_full(video_id, youtube_api, nlp, embedding, limit = 1
   else:
     df = extract_comments(youtube_api, video_id, limit=limit)
     print(f'extracted {len(df)} comments')
-    save_df_csv(df, f'{video_id}_raw')
+    save_df_csv(df, f'{video_id}_raw.csv')
   df= preprocess_df(df)
   df = extract_entities_df(df,nlp,'clean_text')
   df=add_sentiment_df(df,'clean_text')
@@ -32,8 +31,11 @@ def extract_video_transcript_full(video_id, nlp, embedding, win = 60):
     transcript = parse_transcript(video_id)
     save_transcript(video_id,transcript)
     print(f'transcript does not exist, saving raw transcript')
-  
-  df = extract_transcript(video_id, win)
+  else:
+    print('transcript exist,s loading transcript')
+  lines = load_transcript(video_id)
+
+  df = extract_transcript_from_lines(lines, video_id, win)
   df = extract_entities_df(df, nlp, 'text')
   df = embed_df(df, embedding, 'text')
 
