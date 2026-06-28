@@ -1,0 +1,64 @@
+{
+  "results": [
+    {
+      "query": "what is the battery capacity?",
+      "expected": "factual",
+      "predicted": "factual",
+      "correct": true
+    },
+    {
+      "query": "what is the range of the byd seal?",
+      "expected": "factual",
+      "predicted": "factual",
+      "correct": true
+    },
+    {
+      "query": "how fast does it accelerate?",
+      "expected": "factual",
+      "predicted": "factual",
+      "correct": true
+    },
+    {
+      "query": "what screen size does it have?",
+      "expected": "factual",
+      "predicted": "factual",
+      "correct": true
+    },
+    {
+      "query": "does it have apple carplay?",
+      "expected": "factual",
+      "predicted": "factual",
+      "correct": true
+    },
+    {
+      "query": "is tesla better than byd?",
+      "expected": "opinion",
+      "predicted": "opinion",
+      "correct": true
+    },
+    {
+      "query": "what do people think of the interior?",
+      "expected": "opinion",
+      "predicted": "opinion",
+      "correct": true
+    },
+    {
+      "query": "would you recommend this car?",
+      "expected": "opinion",
+      "predicted": "opinion",
+      "correct": true
+    },
+    {
+      "query": "do viewers like the design?",
+      "expected": "opinion",
+      "predicted": "opinion",
+      "correct": true
+    },
+    {
+      "query": "is it worth the price according to comments?",
+      "expected": "opinion",
+      "predicted": "opinion",
+      "correct": true
+    }
+  ]
+}
