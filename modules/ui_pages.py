@@ -232,3 +232,65 @@ def explore_page(df):
         show_comment_cards(sample_rows)
     else:
         st.info("No comments found for this sample type.")
+
+def rag_page(graph):
+    st.header("🤖 Ask the Engine")
+    st.caption(
+        "Ask a question about Tesla vs BYD. Factual questions are answered from "
+        "video transcripts; opinion questions from viewer comments."
+    )
+ 
+    query = st.text_input(
+        "Your question",
+        placeholder="e.g. what is the battery capacity?  /  is tesla better than byd?"
+    )
+ 
+    ask = st.button("Ask")
+ 
+    if ask and query.strip():
+        with st.spinner("Thinking... (classifying, retrieving, answering)"):
+            result = graph.invoke({"query": query})
+ 
+        category = result.get("category", "unknown")
+        answer = result.get("answer", "")
+        chunks = result.get("chunks", [])
+ 
+        # routed category
+        source_label = "📄 Transcripts" if "factual" in category else "💬 Comments"
+        st.markdown(
+            f"**Query type:** `{category}`  →  retrieved from **{source_label}**"
+        )
+ 
+        # the answer
+        st.subheader("Answer")
+        st.markdown(
+            f"""
+            <div class="comment-card">
+                {answer}
+            </div>
+            """,
+            unsafe_allow_html=True
+        )
+ 
+        # the retrieved context (so grounding is visible)
+        st.subheader("Retrieved Sources")
+        if not chunks:
+            st.info("No source chunks retrieved.")
+        else:
+            for i, c in enumerate(chunks, start=1):
+                st.markdown(
+                    f"""
+                    <div class="comment-card">
+                        <span class="small-text">
+                            Source {i} &middot; {c.get('source_type', 'N/A')} &middot;
+                            video {c.get('video_id', 'N/A')}
+                        </span>
+                        <br><br>
+                        {c.get('text', '')}
+                    </div>
+                    """,
+                    unsafe_allow_html=True
+                )
+ 
+    elif ask:
+        st.warning("Please enter a question.")

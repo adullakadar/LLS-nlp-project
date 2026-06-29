@@ -1,7 +1,7 @@
 import streamlit as st
 
-from modules.data_loader import load_all_data
-from modules.ui_pages import dashboard_page, explore_page
+from modules.data_loader import load_all_data, load_rag
+from modules.ui_pages import dashboard_page, explore_page, rag_page
 
 
 # =========================================================
@@ -85,7 +85,7 @@ st.sidebar.title("🚗 EV NLP Engine")
 
 page = st.sidebar.radio(
     "Navigation",
-    ["Dashboard", "Explore Comments"]
+    ["Dashboard", "Explore Comments", 'Chat']
 )
 
 st.sidebar.markdown("---")
@@ -135,3 +135,6 @@ if page == "Dashboard":
 
 elif page == "Explore Comments":
     explore_page(filtered_df)
+elif page == 'Chat':
+    graph = load_rag()
+    rag_page(graph)

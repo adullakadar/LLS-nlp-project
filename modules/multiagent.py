@@ -93,21 +93,30 @@ def comment_agent(state: RAGState):
 # NODE 3 -- answer generation (lab's response_agent)
 # ----------------------------------------------------------------------
 def answer_agent(state: RAGState):
-    # stitch the retrieved chunks into a context block
     context = "\n".join(f"- {c['text']}" for c in state["chunks"])
 
-    prompt = f"""
-    Answer the user's question using ONLY the context below.
-    If the context doesn't contain the answer, say you don't have enough information.
+    if "factual" in state["category"]:
+        prompt = f"""
+        Answer the question using the context below (from video reviews).
+        The context is reliable — extract the relevant facts and answer directly.
+        Only say you lack information if the context truly contains nothing relevant.
 
-    Question:
-    {state['query']}
+        Question: {state['query']}
+        Context: {context}
+        Answer:
+        """
+    else:  # opinion
+        prompt = f"""
+        The context below is viewer comments. Summarize what people think about
+        the question — what they praise, criticize, and disagree on. Do NOT look
+        for a single objective answer; characterize the range of opinions and
+        common themes. Be specific about the sentiments expressed.
 
-    Context:
-    {context}
+        Question: {state['query']}
+        Comments: {context}
+        Summary of opinions:
+        """
 
-    Give a concise, direct answer.
-    """
     result = llm.invoke(prompt)
     return {"answer": result.content}
 

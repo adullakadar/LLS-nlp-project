@@ -1,0 +1,28 @@
+{
+  "results": [
+    {
+      "query": "is the 82.5 kWh battery good?",
+      "expected": "opinion",
+      "predicted": "factual",
+      "correct": false
+    },
+    {
+      "query": "how does the range compare to what people hoped?",
+      "expected": "opinion",
+      "predicted": "factual",
+      "correct": false
+    },
+    {
+      "query": "what's the most complained-about feature?",
+      "expected": "opinion",
+      "predicted": "opinion",
+      "correct": true
+    },
+    {
+      "query": "do the specs justify the price?",
+      "expected": "opinion",
+      "predicted": "opinion",
+      "correct": true
+    }
+  ]
+}

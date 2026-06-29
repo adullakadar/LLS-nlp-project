@@ -4,10 +4,14 @@ from pathlib import Path
 import pandas as pd
 import streamlit as st
 
+from modules.embeddings import embedding_setup
+from modules.retrieval import load_faiss
+from modules.multiagent import build_graph
+import modules.multiagent as agent
 
 TESLA_FILE = Path("model_data/tesla_comments_preprocessed.csv")
 BYD_FILE = Path("model_data/byd_comments_preprocessed.csv")
-META_FILE = Path("model_data/meta_df.csv")
+META_FILE = Path("model_data/meta_data.csv")
 
 
 def clean_col(col):
@@ -123,3 +127,11 @@ def load_all_data():
         meta_df.columns = [clean_col(col) for col in meta_df.columns]
 
     return comments_df, meta_df
+
+def load_rag():
+    embedding = embedding_setup()
+    vs = load_faiss(embedding)
+    agent.VECTORSTORE = vs
+    graph = build_graph()
+
+    return graph
