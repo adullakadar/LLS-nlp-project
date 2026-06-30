@@ -71,6 +71,13 @@ st.markdown(
 
 comments_df, meta_df = load_all_data()
 
+#removes unknown videos - there are some vid ids that have not been tracked properly and thus shows up as unknown but this
+#pushes that under the rug to fix it
+
+if "brand" in comments_df.columns:
+    comments_df["brand"] = comments_df["brand"].astype(str).str.lower().str.strip()
+    comments_df = comments_df[comments_df["brand"].isin(["tesla", "byd"])].copy()
+
 if comments_df.empty:
     st.error("No comment data found. Expected: model_data/meta_data.csv")
     st.stop()
