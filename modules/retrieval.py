@@ -90,7 +90,7 @@ def load_corpus_from_df(df):
   return texts,vectors, metadata
 
 # performs a filtered semantic search, restricting by optional sourcetype and optional video_id.
-def filtered_search(vectorstore, query, source_type=None, video_id=None,k=5, fetch_k=441):
+def filtered_search(vectorstore, query, source_type=None, video_id=None,k=5, fetch_k=40000):
 
     # build the metadata filter from whatever was passed
     meta_filter = {}
