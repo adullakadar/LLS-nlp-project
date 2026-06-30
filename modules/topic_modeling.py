@@ -1,12 +1,17 @@
+'''
+topic modelling module
+uses unsupervised lda to find topics in comments, grouping similar words together.
+'''
+
 import numpy as np
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
  
-
+# runs lda on a provided text column and returns model, the vectorizer and topic-related comments
 def run_lda(df, text_col="clean_text", n_topics=10, max_features=1000):
   texts = df[text_col].dropna().astype(str)
   texts = texts[texts.str.strip() != ""]
-
+#   word-count vectorizers, removes stopwords and keep somewhat uncommon topics.
   vectorizer = CountVectorizer(max_features=max_features, max_df=0.5, stop_words='english')
   X = vectorizer.fit_transform(texts)
 
@@ -22,10 +27,10 @@ def run_lda(df, text_col="clean_text", n_topics=10, max_features=1000):
         f"{X.shape[1]} vocab terms")
   return lda, vectorizer, doc_topics
 
-
+# returns words in comments associated strongly with a topic
 def get_topic_words(lda, vectorizer, n_words=10):
     feature_names = np.array(vectorizer.get_feature_names_out())
-    # sort each topic's word weights descending (lab's argsort + [::-1])
+    # sort weights by descending
     sorting = np.argsort(lda.components_, axis=1)[:, ::-1]
  
     topics = []
@@ -36,10 +41,10 @@ def get_topic_words(lda, vectorizer, n_words=10):
  
  
 def print_topics(lda, vectorizer, n_words=10):
-    """Pretty-print each topic's top words (lab's print_topics equivalent)."""
     for i, words in enumerate(get_topic_words(lda, vectorizer, n_words)):
         print(f"Topic {i:>2}: {' '.join(words)}")
 
+# finds topics for positive and negative sentiments. helps find topics associated with emotions like reliability being a negative or luxury being a positive
 def topics_per_sentiment(df, text_col="clean_text", sentiment_col="sentiment",n_topics=5, n_words=8):
     results = {}
     for sentiment, group in df.groupby(sentiment_col):

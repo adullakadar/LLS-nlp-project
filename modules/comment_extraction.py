@@ -1,3 +1,7 @@
+'''
+The module used in the pipeline to extract raw comments (top level and replies) from a youtube video.
+'''
+
 import googleapiclient.discovery
 import os
 from dotenv import load_dotenv
@@ -7,6 +11,8 @@ load_dotenv()
 
 dev = os.getenv("YT_API_KEY")
 
+
+# loads the youtube api for comment extraction, uses v3 and requires the apikey from the website
 def api_setup():
   api_service_name = "youtube"
   api_version = "v3"
@@ -16,7 +22,7 @@ def api_setup():
   print("loaded youtube api")
   return youtube_api
 
-
+# the deets needed from a top level comment. reply comments do not have the same path so they need different functions
 def top_level_format(item, video_id):
     
     snippet = item["snippet"]["topLevelComment"]["snippet"]
@@ -32,7 +38,7 @@ def top_level_format(item, video_id):
         "public": item["snippet"]["isPublic"]   
     }
  
- 
+
 def reply_format(reply, video_id):
     
     snippet = reply["snippet"]
@@ -48,7 +54,7 @@ def reply_format(reply, video_id):
         "public": True
     }
 
-
+# parses a top level comment and its replies, uses page tokens to travel through replies i believe
 def parse_top_comments(video_id, youtube_api, limit):
     rows = []
     next_page_token = None
@@ -80,6 +86,7 @@ def parse_top_comments(video_id, youtube_api, limit):
  
     return rows
 
+# same thing but for replies
 def parse_replies(parent_id, video_id, youtube_api):
     
     replies = []
@@ -103,7 +110,7 @@ def parse_replies(parent_id, video_id, youtube_api):
     return replies
 
 
-
+# culmination of the other functions and gets called in the pipeline
 def extract_comments(youtube_api, video_id,limit=100):
 
   comments = []

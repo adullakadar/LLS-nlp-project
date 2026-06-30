@@ -6,8 +6,8 @@ import streamlit as st
 
 from modules.embeddings import embedding_setup
 from modules.retrieval import load_faiss
-from modules.multiagent import build_graph
-import modules.multiagent as agent
+from modules.singleagent import build_graph
+import modules.singleagent as agent
 
 TESLA_FILE = Path("model_data/tesla_comments_preprocessed.csv")
 BYD_FILE = Path("model_data/byd_comments_preprocessed.csv")

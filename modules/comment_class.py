@@ -1,3 +1,20 @@
+'''
+THIS FILE HAS BEEN DEPRECATED, IT IS NOT REQUIRED AND EXISTS ONLY AS PROOF OF HISTORY AND INCASE I WANT TO USE IT AGAIN LATER.
+
+basically used at the beginning of the project until I realized I can't have a class for every document type, plus we stopped using mongo as well so there really was no use
+to convert it to json.
+
+but it is a cool concept maybe i'll use it later
+'''
+
+
+
+
+
+
+
+
+
 import datetime
 from typing import Optional
 from dataclasses import dataclass

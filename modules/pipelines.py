@@ -7,14 +7,19 @@ from modules.data_store import save_transcript, transcript_exists, save_df_csv, 
 
 
 # Comment extraction for 1 video, saves raw comments
-def extract_video_comments_full(video_id, youtube_api, nlp, embedding, limit = 150):
-  if csv_exists(f'{video_id}_raw.csv'):
-    df = load_df_csv(f'{video_id}_raw.csv')
+# bugs: not saving as csv, doesnt detect csv, names it as csv.csv.
+# FIXED ALL :thumbs_up:
+
+def extract_video_comments_full(video_id, youtube_api, nlp, embedding, limit):
+  raw_name = f'{video_id}_raw'
+  if csv_exists(raw_name):
     print(f'loaded existing raw_file')
+    df = load_df_csv(raw_name)
   else:
+    print('raw file dont exist, extracting comments')
     df = extract_comments(youtube_api, video_id, limit=limit)
     print(f'extracted {len(df)} comments')
-    save_df_csv(df, f'{video_id}_raw.csv')
+    save_df_csv(df, f'{video_id}_raw')
   df= preprocess_df(df)
   df = extract_entities_df(df,nlp,'clean_text')
   df=add_sentiment_df(df,'clean_text')
@@ -25,7 +30,8 @@ def extract_video_comments_full(video_id, youtube_api, nlp, embedding, limit = 1
   return df
 
 # transcript extraction for 1 video, saves raw transcript
-# modify so it doesnt extract twice
+# modify so it doesnt extract twice -- DONE
+
 def extract_video_transcript_full(video_id, nlp, embedding, win = 60):
   if not transcript_exists(video_id):
     transcript = parse_transcript(video_id)

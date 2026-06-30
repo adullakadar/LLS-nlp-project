@@ -1,3 +1,8 @@
+'''
+The module responsible for cleaning raw extracted commments.
+Removes links, emails, reply mentions, hashtag symbols, new lines, tab spaces, extra whitespace before and after.
+'''
+
 import pandas as pd
 import re
 import html
@@ -29,6 +34,7 @@ def preprocess_comment(text):
   
   return text
 
+# removes null rows, non stringtypes, creates a new clean_text row and returns cleaned df
 def preprocess_df(df):
   df_clean = df.copy()
   df_clean = df_clean.dropna(subset=["text"])
