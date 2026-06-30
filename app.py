@@ -76,7 +76,7 @@ comments_df, meta_df = load_all_data()
 
 if "brand" in comments_df.columns:
     comments_df["brand"] = comments_df["brand"].astype(str).str.lower().str.strip()
-    comments_df = comments_df[comments_df["brand"].isin(["tesla", "byd"])].copy()
+    comments_df = comments_df[comments_df["brand"].isin(["tesla", "byd", "comparison"])].copy()
 
 if comments_df.empty:
     st.error("No comment data found. Expected: model_data/meta_data.csv")

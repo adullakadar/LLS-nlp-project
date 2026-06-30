@@ -13,13 +13,10 @@ TESLA_VIDEO_IDS = {
     "52O3cYsyZMo",
     "XTeWKmlNmN8",
     "KAJFALcJjac",
-
-
 }
 
 
 BYD_VIDEO_IDS = {
-
     "w_tCOgxXKwA",
     "DHRxnTPrzOQ",
     "KLiiOeMU9JQ",
@@ -28,15 +25,13 @@ BYD_VIDEO_IDS = {
     "V0wtNI-rzSg",
     "JgySpSlQQyE",
     "gzHLv6rLSpQ",
+}
 
-    "s4vwZTqAjh0",
-    "4Ju866YlxSk",
-    "UNwaeUI4IRw",
-    "INuMazD5vLA",
-    "hFNE51tURBU",
-    "tzzU3K5FVVc",
-    "IwtI9jw9kAg"
 
+COMPARISON_VIDEO_IDS = {
+    "tezLYZHWkK4",
+    "bEH5gDiESRg",
+    "1umWTYuFVkY",
 }
 
 
@@ -108,6 +103,9 @@ def detect_brand_from_video_id(video_id):
     if video_id in BYD_VIDEO_IDS:
         return "byd"
 
+    if video_id in COMPARISON_VIDEO_IDS:
+        return "comparison"
+
     return "unknown"
 
 
@@ -166,11 +164,13 @@ def load_all_data():
     if "video_id" not in comments_df.columns:
         comments_df["video_id"] = "unknown_video"
 
-    comments_df["video_id"] = comments_df["video_id"].astype(str)
+    comments_df["video_id"] = comments_df["video_id"].astype(str).str.strip()
     comments_df["brand"] = comments_df["video_id"].apply(detect_brand_from_video_id)
 
-    comments_df = comments_df[comments_df["brand"].isin(["tesla", "byd"])].copy()
-    
+    comments_df = comments_df[
+        comments_df["brand"].isin(["tesla", "byd", "comparison"])
+    ].copy()
+
     if "serial_no" not in comments_df.columns:
         comments_df["serial_no"] = range(1, len(comments_df) + 1)
 
