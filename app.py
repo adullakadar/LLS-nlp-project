@@ -10,7 +10,6 @@ from modules.ui_pages import dashboard_page, explore_page, rag_page
 
 st.set_page_config(
     page_title="Tesla vs BYD YouTube Intelligence Engine",
-    page_icon="🚗",
     layout="wide"
 )
 
@@ -73,7 +72,7 @@ st.markdown(
 comments_df, meta_df = load_all_data()
 
 if comments_df.empty:
-    st.error("No comment data found. Expected: model_data/tesla_comments_preprocessed.csv")
+    st.error("No comment data found. Expected: model_data/meta_data.csv")
     st.stop()
 
 
@@ -81,7 +80,7 @@ if comments_df.empty:
 # SIDEBAR
 # =========================================================
 
-st.sidebar.title("🚗 EV NLP Engine")
+st.sidebar.title("EV NLP Engine")
 
 page = st.sidebar.radio(
     "Navigation",
