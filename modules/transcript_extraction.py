@@ -8,7 +8,7 @@ NP_CHUNK_GRAMMAR = r"NP: {<DT>?<JJ>*<NN.*>+}"
 NP_CHINK_GRAMMAR = r"""
 NP:
   {<.*>+}              # chunk everything first
-  }<VB.*|IN|DT|CC>+{   # then chink out verbs, prepositions, determiners, conjunctions
+  }<VB.*|IN|DT|CC>+{   # then chink out verbs, prepositions,determiners, conjunctions
 """
 
 def nltk_setup():
@@ -78,7 +78,7 @@ def phrases_from_tree(tree):
     for subtree in tree.subtrees(filter=lambda t: t.label() == "NP"):
         words = [word for word, tag in subtree.leaves()]
         phrases.append(" ".join(words))
-    return list(dict.fromkeys(phrases))   # de-dup, keep order
+    return list(dict.fromkeys(phrases))
  
  
 def extract_noun_phrases(text, grammar=NP_CHUNK_GRAMMAR):
@@ -117,25 +117,23 @@ def extract_noun_phrases_chink(text, grammar=NP_CHINK_GRAMMAR):
 #   return pd.DataFrame(rows)
 
 
-def extract_transcript_from_lines(lines, video_id, window_seconds):
-    """Build the chunked df from already-parsed lines (no fetch)."""
-    chunks = chunk_lines(lines, window_seconds)
-    rows = []
-    for i, chunk in enumerate(chunks):
-        row = {
-            "source_id": f"{video_id}_t_{i}",
-            "source_type": "transcript",
-            "video_id": video_id,
-            "chunk_index": i,
-            "start_time": round(chunk["start_time"], 1),
-            "text": chunk["text"],
-        }
-        row["noun_phrases"] = extract_noun_phrases(chunk["text"])
-        rows.append(row)
-    return pd.DataFrame(rows)
+def extract_transcript_from_lines(lines, video_id,window_seconds):
+  chunks= chunk_lines(lines,window_seconds)
+  rows= []
+  for i, chunk in enumerate(chunks):
+    row = {
+      "source_id": f"{video_id}_t_{i}",
+      "source_type": "transcript",
+      "video_id": video_id,
+      "chunk_index": i,
+      "start_time": round(chunk["start_time"], 1),
+      "text": chunk["text"]
+    }
+    row["noun_phrases"] = extract_noun_phrases(chunk["text"])
+    rows.append(row)
+  return pd.DataFrame(rows)
 
 
 def extract_transcript(video_id, window_seconds):
-    """Fetch + chunk (original behavior, for direct callers)."""
-    lines = parse_transcript(video_id)
-    return extract_transcript_from_lines(lines, video_id, window_seconds)
+  lines = parse_transcript(video_id)
+  return extract_transcript_from_lines(lines, video_id, window_seconds)
