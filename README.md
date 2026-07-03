@@ -30,6 +30,7 @@ note2: in vsc make sure your python interpretor is running the venv python, and 
 5) If you want to run the code yourself, obtain a youtube API connection key and insert into .env (YT_API_KEY='_')
 6) important on vscode if u want to run the code yourself: downgrade jupyter extension to 2025.8 if running code through notebooks
 7) have ollama installed and running, pull embeddinggemma and qwen3:8b
+Note3: For mac, run ollama serve in a terminal and open a different terminal
 8) the code currently does have mongodb integration but it does not use it right now, so no mongo connection string is required but this may change in the future.
 
 To run the program:
